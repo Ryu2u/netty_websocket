@@ -19,6 +19,7 @@ import org.apache.log4j.Logger;
 
 import javax.xml.transform.Result;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 
 import static io.netty.handler.codec.http.HttpUtil.isKeepAlive;
@@ -84,10 +85,14 @@ public class WebSocketHandler extends SimpleChannelInboundHandler<Object> {
             return;
         }
         // 本例程仅支持文本消息，不支持二进制消息
-        if (!(frame instanceof TextWebSocketFrame)) {
-            logger.debug("本例程仅支持文本消息，不支持二进制消息");
-            throw new UnsupportedOperationException(String.format(
-                    "%s frame types not supported", frame.getClass().getName()));
+        if (frame instanceof BinaryWebSocketFrame) {
+            BinaryWebSocketFrame binaryFrame = (BinaryWebSocketFrame) frame;
+            logger.debug("接收二进制消息,消息长度:{" + binaryFrame.content().capacity() + "}!");
+            ByteBuf byteBuf = Unpooled.directBuffer(binaryFrame.content().capacity());
+            byte[] array = byteBuf.array();
+            logger.debug("接收的二进制字节数组: [" + Arrays.toString(array) + "]");
+
+            return;
         }
         // 返回应答消息
         String request = ((TextWebSocketFrame) frame).text();

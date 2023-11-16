@@ -1,12 +1,18 @@
 package com.ryu2u;
 
 import io.netty.bootstrap.ServerBootstrap;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 import io.netty.channel.Channel;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.handler.codec.http.websocketx.BinaryWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import org.apache.log4j.Logger;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.util.concurrent.Executors;
 
 import static java.lang.Thread.sleep;
@@ -48,11 +54,18 @@ public class WebSocketServer {
     public static void main(String[] args) {
 
         Executors.newFixedThreadPool(1).execute(() -> {
-            while (true){
-                ChannelSupervise.send2All(new TextWebSocketFrame("Ping!"));
+            while (true) {
                 try {
+//                    File file = new File("pom.xml");
+//                    FileInputStream fis = new FileInputStream(file);
+//                    ByteArrayOutputStream bos = new ByteArrayOutputStream();
+
+                    ByteBuf buf = Unpooled.buffer();
+                    byte[] bytes = {1, 2, 5, 3, 2, 1, 5, 6, 2, 5, 7, 7, 54, 4, 6, 7, 5, 4, 2, 3, 6, 7, 8, 6, 4, 3, 34, 5, 7, 8, 6, 5, 3, 1, 3, 6, 6};
+                    buf.writeBytes(bytes);
+                    ChannelSupervise.send2All(new BinaryWebSocketFrame(buf));
                     sleep(4000);
-                } catch (InterruptedException e) {
+                } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
             }

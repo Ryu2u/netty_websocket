@@ -5,6 +5,7 @@ import io.netty.channel.ChannelId;
 import io.netty.channel.group.ChannelGroup;
 import io.netty.channel.group.DefaultChannelGroup;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
+import io.netty.handler.codec.http.websocketx.WebSocketFrame;
 import io.netty.util.concurrent.GlobalEventExecutor;
 
 import java.util.concurrent.ConcurrentHashMap;
@@ -18,12 +19,13 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class ChannelSupervise {
     private static final ChannelGroup GLOBAL_GROUP = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
-    private static final ConcurrentHashMap<String,ChannelGroup> GROUP_MAP = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<String, ChannelGroup> GROUP_MAP = new ConcurrentHashMap<>();
     private static final ConcurrentHashMap<String, ChannelId> CHANNEL_MAP = new ConcurrentHashMap<>();
 
     /**
      * 添加到总的group组中
      * 之后可以进行广播通知
+     *
      * @param channel
      */
     public static void addChannel(Channel channel) {
@@ -61,7 +63,7 @@ public class ChannelSupervise {
         return GLOBAL_GROUP.find(channelId);
     }
 
-    public static void send2All(TextWebSocketFrame tws) {
+    public static void send2All(WebSocketFrame tws) {
         GLOBAL_GROUP.writeAndFlush(tws);
     }
 

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script>
+        var socket;
+        var uri = "ws://127.0.0.1:8084/ws";  // 示例地址
+        function Connect(uri) {
+            socket = new WebSocket(uri);
+            socket.binaryType = "arraybuffer";
+            socket.onopen = function (e) {
+                console.log("已连接至服务器");
+            };
+            socket.onclose = function (e) {
+                console.log("链接已关闭");
+            };
+            socket.onmessage = function (e) {
+                console.log("接收到数据!")
+                console.log(e);
+                if (e.data instanceof  ArrayBuffer){
+                    doReceive(e.data);
+                }
+            };
+            socket.onerror = function (e) {
+                console.log("出现错误");
+            };
+        }
+        function doReceive(buffer) {
+            console.log(buffer);
+        }
+        Connect(uri);
+    </script>
+</head>
+<body>
+
+</body>
+</html>
