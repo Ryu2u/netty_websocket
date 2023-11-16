@@ -4,7 +4,12 @@ import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import org.apache.log4j.Logger;
+
+import java.util.concurrent.Executors;
+
+import static java.lang.Thread.sleep;
 
 /**
  * WebSocket 启动类
@@ -41,6 +46,18 @@ public class WebSocketServer {
     }
 
     public static void main(String[] args) {
+
+        Executors.newFixedThreadPool(1).execute(() -> {
+            while (true){
+                ChannelSupervise.send2All(new TextWebSocketFrame("Ping!"));
+                try {
+                    sleep(4000);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
+
         new WebSocketServer().run();
     }
 
