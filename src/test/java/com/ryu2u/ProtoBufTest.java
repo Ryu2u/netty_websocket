@@ -1,6 +1,7 @@
 package com.ryu2u;
 
 import com.ryu2u.obj.ResponseOuterClass;
+import message.Message;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -31,6 +32,10 @@ public class ProtoBufTest {
         }catch (Exception e){
             e.printStackTrace();
         }
+    }
+
+    @Test
+    public void testMessage(){
 
     }
 
